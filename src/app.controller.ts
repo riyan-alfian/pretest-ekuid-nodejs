@@ -7,7 +7,6 @@ import { firstValueFrom } from 'rxjs';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
-  // constructor(private readonly httpService: HttpService) {}
 
   @Get()
   getHello(): string{
@@ -16,51 +15,17 @@ export class AppController {
 
   @Post('question_one')
   questionOne(@Body() body: AppDto) {
-    let arrayInput = body.input;
-    let lengthInput = body.input.length;
-
-    let newData = [];
-    let start = 0;
-    let end = 0;
-
-    for(let i = 0; i < lengthInput; i++){ // Slicing Array
-      end ++;
-      if(arrayInput[i+1] < arrayInput[i]){
-        newData = [...newData, arrayInput.slice(start, end)];
-
-        start = i + 1;
-      }
-    }
-
-    newData = [...newData, arrayInput.slice(start, end)]; // Last data
-
-    let result = [];
-    for(let i = 0; i < newData.length; i++){ //Get Median and Mean
-      const mean = newData[i].reduce((a, b) => a + b, 0) / newData[i].length;
-      const middle = Math.floor(newData[i].length / 2);
-      const median = newData[i].length % 2 === 0 ? ((newData[i][middle - 1] + newData[i][middle]) / 2) : newData[i][middle];
-      
-      result = [...result, Object.assign({}, {"mean":mean, "median":median})]
-    }
-
-    return result;
+    return this.appService.questionOne(body.input);
   }
 
   @Post('question_two')
   questionTwo(@Body() body: AppDto) {
+    return this.appService.questionTwo(body.input);
+  }
 
-    let usd = [];
-    for(let i = 0; i < body.input.length; i++){
-      const amount = body.input[i]['amount'];
-      const currency = body.input[i]['currency'];
-
-      
-      let usdAmount = this.appService.getUSD(amount, currency);
-
-      usd = [...usd, usdAmount];
-    }
-
-    return usd;
+  @Post('question_three')
+  questionThree(@Body() body: AppDto) {
+    return this.appService.questionThree(body.input);
   }
 
 }
